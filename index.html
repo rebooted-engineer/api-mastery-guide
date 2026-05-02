@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Mastery Guide — rebooted_engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0a12;
+  --ink2: #13131f;
+  --ink3: #1e1e30;
+  --gold: #c9a84c;
+  --gold2: #e8c97a;
+  --gold3: #f5e4b0;
+  --teal: #2dd4bf;
+  --teal2: #5eead4;
+  --rose: #fb7185;
+  --violet: #a78bfa;
+  --text: #e8e6f0;
+  --muted: #7c7a8e;
+  --border: rgba(201,168,76,0.12);
+  --border2: rgba(201,168,76,0.28);
+  --display: 'Fraunces', serif;
+  --mono: 'JetBrains Mono', monospace;
+  --body: 'DM Sans', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* GRAIN */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+}
+
+.progress {
+  position:fixed;
+  top:0; left:0;
+  height:2px;
+  background:linear-gradient(90deg, var(--gold), var(--teal));
+  z-index:1000;
+  width:0%;
+  transition:width 0.1s;
+}
+
+/* NAV */
+.nav {
+  position:sticky;
+  top:0;
+  background:rgba(10,10,18,0.96);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  z-index:100;
+  padding:10px 0;
+}
+.nav-inner {
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 24px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.nav-inner::-webkit-scrollbar{display:none;}
+.nav-logo {
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--gold);
+  margin-right:16px;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.nav-btn {
+  background:none;
+  border:1px solid var(--border);
+  color:var(--muted);
+  font-family:var(--mono);
+  font-size:10px;
+  padding:5px 12px;
+  border-radius:3px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:all 0.2s;
+  letter-spacing:0.5px;
+}
+.nav-btn:hover, .nav-btn.active {
+  border-color:var(--gold);
+  color:var(--gold2);
+  background:rgba(201,168,76,0.06);
+}
+
+.wrap { max-width:1080px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+
+/* HERO */
+.hero {
+  padding:80px 0 64px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:0;
+}
+.hero-eyebrow {
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--gold);
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:24px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.hero-eyebrow::before {
+  content:'';
+  width:32px;
+  height:1px;
+  background:var(--gold);
+}
+.hero h1 {
+  font-family:var(--display);
+  font-size:clamp(40px,7vw,88px);
+  font-weight:900;
+  line-height:0.95;
+  letter-spacing:-3px;
+  margin-bottom:28px;
+  color:var(--text);
+}
+.hero h1 em {
+  font-style:italic;
+  color:var(--gold2);
+}
+.hero-desc {
+  font-size:15px;
+  color:var(--muted);
+  max-width:580px;
+  line-height:1.8;
+  margin-bottom:40px;
+}
+.hero-stats {
+  display:flex;
+  gap:40px;
+  flex-wrap:wrap;
+  padding-top:32px;
+  border-top:1px solid var(--border);
+}
+.stat { }
+.stat-n {
+  font-family:var(--display);
+  font-size:36px;
+  font-weight:900;
+  color:var(--gold2);
+  line-height:1;
+  margin-bottom:4px;
+}
+.stat-l {
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+}
+
+/* SECTION */
+.section {
+  padding:64px 0 0;
+}
+.section-label {
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--gold);
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.section-title {
+  font-family:var(--display);
+  font-size:clamp(28px,4vw,48px);
+  font-weight:900;
+  letter-spacing:-1.5px;
+  color:var(--text);
+  margin-bottom:8px;
+  line-height:1.05;
+}
+.section-title em { font-style:italic; color:var(--gold2); }
+.section-desc {
+  font-size:14px;
+  color:var(--muted);
+  max-width:640px;
+  margin-bottom:36px;
+  line-height:1.8;
+}
+
+/* TOPIC CARDS GRID */
+.topic-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  margin-bottom:48px;
+}
+.topic-card {
+  background:var(--ink2);
+  padding:0;
+  cursor:pointer;
+  transition:background 0.2s;
+}
+.topic-card:hover { background:var(--ink3); }
+.topic-card.open { background:var(--ink3); }
+
+.card-top {
+  padding:20px 24px;
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+}
+.card-icon {
+  width:36px;
+  height:36px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.card-text { flex:1; }
+.card-title {
+  font-family:var(--display);
+  font-size:16px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:4px;
+  letter-spacing:-0.3px;
+}
+.card-sub {
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.5;
+}
+.card-toggle {
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  border:1px solid var(--border2);
+  background:none;
+  color:var(--muted);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  transition:all 0.25s;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.topic-card.open .card-toggle {
+  background:var(--gold);
+  border-color:var(--gold);
+  color:var(--ink);
+  transform:rotate(45deg);
+}
+
+.card-body {
+  display:none;
+  border-top:1px solid var(--border);
+  padding:20px 24px 24px;
+}
+.topic-card.open .card-body { display:block; }
+
+/* SUBTOPIC */
+.subtopic { margin-bottom:20px; }
+.subtopic:last-child { margin-bottom:0; }
+.subtopic-name {
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--teal2);
+  margin-bottom:6px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.subtopic-name::before { content:'>'; color:var(--gold); }
+.subtopic-desc {
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.65;
+  margin-bottom:10px;
+}
+.concept-list {
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-bottom:12px;
+}
+.concept {
+  font-family:var(--mono);
+  font-size:10px;
+  padding:3px 9px;
+  border-radius:3px;
+  border:1px solid var(--border2);
+  color:var(--gold3);
+  background:rgba(201,168,76,0.05);
+}
+
+/* EXERCISES */
+.ex-label {
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--teal);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.exercise {
+  background:var(--ink);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:10px 14px;
+  margin-bottom:6px;
+  display:grid;
+  grid-template-columns:24px 1fr;
+  gap:10px;
+}
+.ex-num {
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--gold);
+  font-weight:700;
+  padding-top:1px;
+}
+.ex-text { font-size:12px; color:var(--text); line-height:1.55; }
+.ex-hint { font-size:11px; color:var(--muted); margin-top:4px; font-style:italic; }
+
+/* LEVELS */
+.level-row {
+  display:flex;
+  gap:6px;
+  margin-top:8px;
+  flex-wrap:wrap;
+}
+.level-pill {
+  font-family:var(--mono);
+  font-size:9px;
+  padding:2px 8px;
+  border-radius:20px;
+  letter-spacing:0.5px;
+}
+.pill-green { background:rgba(45,212,191,0.1); color:var(--teal2); border:1px solid rgba(45,212,191,0.2); }
+.pill-gold { background:rgba(201,168,76,0.1); color:var(--gold2); border:1px solid rgba(201,168,76,0.2); }
+.pill-rose { background:rgba(251,113,133,0.1); color:var(--rose); border:1px solid rgba(251,113,133,0.2); }
+.pill-violet { background:rgba(167,139,250,0.1); color:var(--violet); border:1px solid rgba(167,139,250,0.2); }
+
+/* PROJECTS */
+.projects-list { display:flex; flex-direction:column; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:48px; }
+.project-card { background:var(--ink2); cursor:pointer; transition:background 0.2s; }
+.project-card:hover { background:var(--ink3); }
+.project-card.open { background:var(--ink3); }
+
+.proj-header {
+  padding:20px 28px;
+  display:grid;
+  grid-template-columns:52px 1fr auto;
+  gap:16px;
+  align-items:center;
+}
+.proj-num {
+  font-family:var(--display);
+  font-size:32px;
+  font-weight:900;
+  color:var(--border2);
+  line-height:1;
+  text-align:right;
+}
+.proj-info { }
+.proj-title {
+  font-family:var(--display);
+  font-size:18px;
+  font-weight:700;
+  color:var(--text);
+  letter-spacing:-0.4px;
+  margin-bottom:3px;
+}
+.proj-short { font-size:12px; color:var(--muted); }
+.proj-badge {
+  padding:4px 12px;
+  border-radius:20px;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:600;
+  white-space:nowrap;
+}
+.badge-b { background:rgba(45,212,191,0.1); color:var(--teal2); border:1px solid rgba(45,212,191,0.2); }
+.badge-i { background:rgba(201,168,76,0.1); color:var(--gold2); border:1px solid rgba(201,168,76,0.2); }
+.badge-a { background:rgba(251,113,133,0.1); color:var(--rose); border:1px solid rgba(251,113,133,0.2); }
+
+.proj-body {
+  display:none;
+  padding:0 28px 28px;
+  border-top:1px solid var(--border);
+}
+.project-card.open .proj-body { display:block; }
+
+.proj-section {
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--teal);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin:18px 0 10px;
+}
+.proj-desc {
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.75;
+  margin-bottom:4px;
+}
+
+.milestone-list { list-style:none; counter-reset:ms; }
+.milestone {
+  counter-increment:ms;
+  padding:9px 14px 9px 42px;
+  background:var(--ink);
+  border:1px solid var(--border);
+  border-radius:6px;
+  margin-bottom:5px;
+  position:relative;
+  font-size:12px;
+  color:var(--text);
+  line-height:1.55;
+}
+.milestone::before {
+  content:counter(ms);
+  position:absolute;
+  left:14px;
+  top:9px;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:700;
+  color:var(--gold);
+  width:18px;
+}
+
+.topics-row { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:14px; }
+
+.claude-block {
+  background:var(--ink);
+  border:1px solid var(--border);
+  border-left:3px solid var(--teal);
+  border-radius:0 6px 6px 0;
+  padding:14px 16px;
+  position:relative;
+  margin-top:14px;
+}
+.claude-lbl {
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--teal);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.claude-block pre {
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--violet);
+  line-height:1.65;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+.copy-btn {
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:rgba(201,168,76,0.08);
+  border:1px solid var(--border);
+  color:var(--muted);
+  font-family:var(--mono);
+  font-size:9px;
+  padding:3px 9px;
+  border-radius:3px;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.copy-btn:hover { border-color:var(--gold); color:var(--gold2); }
+
+/* CHEATSHEET TABLE */
+.table-wrap { overflow-x:auto; margin-bottom:32px; }
+table { width:100%; border-collapse:collapse; font-size:12px; }
+th {
+  background:var(--ink3);
+  color:var(--gold2);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  padding:10px 16px;
+  text-align:left;
+  border-bottom:1px solid var(--border2);
+}
+td {
+  padding:10px 16px;
+  border-bottom:1px solid var(--border);
+  color:var(--text);
+  vertical-align:top;
+  line-height:1.55;
+}
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(201,168,76,0.02); }
+td:first-child { font-family:var(--mono); color:var(--gold2); font-size:11px; }
+td:nth-child(2) { color:var(--muted); }
+
+/* INFO BOXES */
+.info-box {
+  border-left:3px solid var(--gold);
+  background:rgba(201,168,76,0.04);
+  border-radius:0 8px 8px 0;
+  padding:14px 18px;
+  margin-bottom:16px;
+}
+.info-box.teal { border-color:var(--teal); background:rgba(45,212,191,0.04); }
+.info-box.rose { border-color:var(--rose); background:rgba(251,113,133,0.04); }
+.info-title { font-weight:600; font-size:12px; color:var(--gold2); margin-bottom:5px; }
+.info-box.teal .info-title { color:var(--teal2); }
+.info-box.rose .info-title { color:var(--rose); }
+.info-text { font-size:12px; color:var(--muted); line-height:1.65; }
+
+/* CODE BLOCK */
+.code-block {
+  background:var(--ink);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:16px 20px;
+  margin:12px 0;
+  overflow-x:auto;
+}
+.code-block pre {
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--text);
+  line-height:1.7;
+  white-space:pre;
+}
+.code-block .kw { color:var(--violet); }
+.code-block .str { color:var(--teal2); }
+.code-block .cm { color:var(--muted); font-style:italic; }
+.code-block .fn { color:var(--gold2); }
+.code-block .num { color:var(--rose); }
+
+/* DIVIDER */
+.divider { border:none; border-top:1px solid var(--border); margin:48px 0; }
+
+/* FOOTER */
+.footer {
+  margin-top:80px;
+  padding:32px 0;
+  border-top:1px solid var(--border);
+  text-align:center;
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--muted);
+}
+.footer span { color:var(--gold2); }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:var(--ink); }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.topic-card, .project-card { animation:fadeUp 0.35s ease both; }
+
+@media(max-width:600px){
+  .hero h1{font-size:42px;}
+  .topic-grid{grid-template-columns:1fr;}
+  .proj-header{grid-template-columns:40px 1fr;}
+  .proj-badge{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="prog"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">api_mastery</div>
+    <button class="nav-btn active" onclick="go('fundamentals')">Fundamentals</button>
+    <button class="nav-btn" onclick="go('rest')">REST Design</button>
+    <button class="nav-btn" onclick="go('auth')">Auth & Security</button>
+    <button class="nav-btn" onclick="go('advanced')">Advanced</button>
+    <button class="nav-btn" onclick="go('protocols')">Protocols</button>
+    <button class="nav-btn" onclick="go('performance')">Performance</button>
+    <button class="nav-btn" onclick="go('testing')">Testing</button>
+    <button class="nav-btn" onclick="go('projects')">Projects</button>
+    <button class="nav-btn" onclick="go('cheatsheet')">Cheatsheet</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <div class="hero-eyebrow">rebooted_engineer</div>
+  <h1>API <em>Mastery</em><br>Complete Guide</h1>
+  <p class="hero-desc">Every concept a senior backend developer must know about APIs — from HTTP fundamentals to GraphQL, WebSockets, security, performance, and production patterns. With 15 projects to prove each skill.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">8</div><div class="stat-l">Topic sections</div></div>
+    <div class="stat"><div class="stat-n">40+</div><div class="stat-l">Subtopics</div></div>
+    <div class="stat"><div class="stat-n">120+</div><div class="stat-l">Exercises</div></div>
+    <div class="stat"><div class="stat-n">15</div><div class="stat-l">Projects</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION 1: FUNDAMENTALS -->
+<!-- ═══════════════════════════════ -->
+<div class="section" id="fundamentals">
+  <div class="section-label">Section 01</div>
+  <div class="section-title">HTTP <em>Fundamentals</em></div>
+  <div class="section-desc">Before you design or consume a single API, you must understand the protocol underneath everything. This is what separates developers who use APIs from engineers who master them.</div>
+
+  <div class="topic-grid">
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(201,168,76,0.1)">🌐</div>
+        <div class="card-text">
+          <div class="card-title">HTTP Methods</div>
+          <div class="card-sub">GET, POST, PUT, PATCH, DELETE — semantics and idempotency</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Method semantics and safe/idempotent rules</div>
+          <div class="subtopic-desc">Every HTTP method carries an implicit contract about what happens when you call it multiple times. Senior developers never confuse these.</div>
+          <div class="concept-list">
+            <span class="concept">GET</span><span class="concept">POST</span><span class="concept">PUT</span><span class="concept">PATCH</span><span class="concept">DELETE</span><span class="concept">HEAD</span><span class="concept">OPTIONS</span><span class="concept">idempotent</span><span class="concept">safe</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Build a notes API. For each endpoint, write down: which method, is it safe, is it idempotent, what status code on success, what status code on "not found".</div><div class="ex-hint">GET /notes (200), POST /notes (201), PUT /notes/:id (200), DELETE /notes/:id (204)</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Explain to yourself why PUT /users/1 called 10 times has the same result as calling it once, but POST /users called 10 times creates 10 users.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Design a PATCH endpoint for updating a user's email only. Show the request body and explain why PATCH is more correct than PUT for partial updates.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(45,212,191,0.1)">📊</div>
+        <div class="card-text">
+          <div class="card-title">Status Codes</div>
+          <div class="card-sub">The complete language of HTTP responses — every range matters</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">All five ranges — what each means and when to use each code</div>
+          <div class="subtopic-desc">Most developers know 200 and 404. Senior developers know exactly which code fits which situation — and why it matters for clients and caches.</div>
+          <div class="concept-list">
+            <span class="concept">200 OK</span><span class="concept">201 Created</span><span class="concept">204 No Content</span><span class="concept">301 Moved</span><span class="concept">304 Not Modified</span><span class="concept">400 Bad Request</span><span class="concept">401 Unauthorized</span><span class="concept">403 Forbidden</span><span class="concept">404 Not Found</span><span class="concept">409 Conflict</span><span class="concept">422 Unprocessable</span><span class="concept">429 Too Many Requests</span><span class="concept">500 Server Error</span><span class="concept">503 Unavailable</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">For a user registration endpoint: what code when email already exists? When password is too short? When email format is invalid? When DB is down?</div><div class="ex-hint">409, 422, 400, 503 — understand the difference between each</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Explain the difference between 401 and 403. Build a route that returns 401 when no token is provided and 403 when the token is valid but the role is insufficient.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Build a middleware that maps your exception types to correct HTTP status codes: ValidationError→422, NotFoundError→404, DuplicateError→409, DatabaseError→503.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(167,139,250,0.1)">📋</div>
+        <div class="card-text">
+          <div class="card-title">Headers</div>
+          <div class="card-sub">Request and response headers every backend dev must know</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Content negotiation and control headers</div>
+          <div class="subtopic-desc">Headers are the metadata of HTTP. They control caching, content type, authentication, CORS, and much more. You must be fluent in the important ones.</div>
+          <div class="concept-list">
+            <span class="concept">Content-Type</span><span class="concept">Accept</span><span class="concept">Authorization</span><span class="concept">Cache-Control</span><span class="concept">ETag</span><span class="concept">If-None-Match</span><span class="concept">X-Request-ID</span><span class="concept">Retry-After</span><span class="concept">X-RateLimit-*</span><span class="concept">CORS headers</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Add an X-Request-ID header to every request in your FastAPI app using middleware. Log every request with its ID so you can trace issues across logs.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Implement ETag-based caching for a GET endpoint: generate ETag from response hash, return 304 Not Modified if client sends matching If-None-Match header.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Add rate limit headers to your API: X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, and Retry-After when limit is exceeded.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(251,113,133,0.1)">🔄</div>
+        <div class="card-text">
+          <div class="card-title">Request/Response Lifecycle</div>
+          <div class="card-sub">DNS → TCP → TLS → HTTP — what happens before your code runs</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">The complete journey of an HTTP request</div>
+          <div class="subtopic-desc">Senior developers can trace a slow request from DNS lookup through TCP handshake, TLS negotiation, HTTP parsing, middleware, handler, serialization, and back. This knowledge is essential for debugging production issues.</div>
+          <div class="concept-list">
+            <span class="concept">DNS resolution</span><span class="concept">TCP handshake</span><span class="concept">TLS handshake</span><span class="concept">keep-alive</span><span class="concept">HTTP/2 multiplexing</span><span class="concept">middleware chain</span><span class="concept">serialization</span><span class="concept">connection pooling</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Use curl -v to make a request to your API and trace every step — TCP connection, TLS certificates, request headers sent, response headers received. Explain each line.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Add timing middleware to your FastAPI app that logs: time to first byte, time in handler, serialization time, total response time. Identify your slowest component.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Explain in writing what happens when you call requests.get("https://api.example.com/users") — every step from the Python line to the bytes arriving at your machine.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION 2: REST DESIGN -->
+<!-- ═══════════════════════════════ -->
+<div class="section" id="rest">
+  <div class="section-label">Section 02</div>
+  <div class="section-title">REST API <em>Design</em></div>
+  <div class="section-desc">REST is not just "use HTTP verbs". It's a discipline. Senior developers design APIs that are intuitive, consistent, versioned, and that won't break clients when they evolve.</div>
+
+  <div class="topic-grid">
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(201,168,76,0.1)">📐</div>
+        <div class="card-text">
+          <div class="card-title">URL Design & Resource Naming</div>
+          <div class="card-sub">Nouns not verbs, plural resources, nested relationships</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Resource-oriented URL structure</div>
+          <div class="subtopic-desc">A well-designed URL is self-documenting. Clients should be able to guess how to access related resources without reading docs.</div>
+          <div class="concept-list">
+            <span class="concept">plural nouns</span><span class="concept">kebab-case</span><span class="concept">nested resources</span><span class="concept">query params for filtering</span><span class="concept">path params for identity</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Redesign these bad URLs into proper REST: /getUsers, /createPost, /deleteComment?id=5, /user_posts_list</div><div class="ex-hint">GET /users, POST /posts, DELETE /comments/5, GET /users/:id/posts</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Design the complete URL structure for a blog platform: users, posts, comments, tags, categories, drafts, published posts. Show every endpoint with its method.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">When should you use /users/1/posts vs /posts?user_id=1? Write the rule and give 3 examples of each pattern with justification.</div></div></div>
+        </div>
+        <div class="subtopic">
+          <div class="subtopic-name">Query parameters — filtering, sorting, pagination</div>
+          <div class="subtopic-desc">Consistent query parameter conventions make your API predictable across all endpoints.</div>
+          <div class="concept-list">
+            <span class="concept">?filter[field]=value</span><span class="concept">?sort=field,-date</span><span class="concept">?page=2&limit=20</span><span class="concept">?cursor=abc123</span><span class="concept">?search=term</span><span class="concept">?include=author,tags</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Implement a GET /posts endpoint supporting: filter by status and author, sort by created_at or title (asc/desc), paginate with page+limit, and full-text search.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Implement cursor-based pagination instead of page numbers. Explain why cursor pagination is better for real-time data feeds.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Add an ?include=author,tags parameter that eagerly loads related data only when requested, avoiding N+1 queries when not needed.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(45,212,191,0.1)">📦</div>
+        <div class="card-text">
+          <div class="card-title">Request & Response Design</div>
+          <div class="card-sub">Consistent envelopes, error formats, pagination metadata</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Consistent response envelope</div>
+          <div class="subtopic-desc">Every response from your API should have the same shape. Clients should never be surprised by the structure.</div>
+          <div class="concept-list">
+            <span class="concept">data envelope</span><span class="concept">meta object</span><span class="concept">pagination info</span><span class="concept">error format</span><span class="concept">RFC 7807</span>
+          </div>
+          <div class="code-block"><pre><span class="cm">// Consistent success response</span>
+{
+  <span class="str">"data"</span>: { <span class="str">"id"</span>: <span class="num">1</span>, <span class="str">"title"</span>: <span class="str">"My Post"</span> },
+  <span class="str">"meta"</span>: {
+    <span class="str">"timestamp"</span>: <span class="str">"2025-03-24T14:32:00Z"</span>,
+    <span class="str">"request_id"</span>: <span class="str">"req_abc123"</span>
+  }
+}
+
+<span class="cm">// Consistent error response (RFC 7807)</span>
+{
+  <span class="str">"type"</span>: <span class="str">"https://api.example.com/errors/validation"</span>,
+  <span class="str">"title"</span>: <span class="str">"Validation Error"</span>,
+  <span class="str">"status"</span>: <span class="num">422</span>,
+  <span class="str">"detail"</span>: <span class="str">"Email is already registered"</span>,
+  <span class="str">"instance"</span>: <span class="str">"/users/register"</span>
+}</pre></div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Build a FastAPI middleware that wraps every response in a consistent envelope with data, meta.timestamp, and meta.request_id automatically.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Implement RFC 7807 error responses for your API. Every error — validation, not found, auth — should return the same structured error format with correct fields.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Design and implement a paginated list response that includes: data array, total count, page, limit, has_next, has_previous, next_cursor, previous_cursor.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(167,139,250,0.1)">🔖</div>
+        <div class="card-text">
+          <div class="card-title">API Versioning</div>
+          <div class="card-sub">URL, header, and content negotiation versioning strategies</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Versioning strategies and breaking vs non-breaking changes</div>
+          <div class="subtopic-desc">APIs must evolve without breaking existing clients. Understanding what constitutes a breaking change is fundamental to API design.</div>
+          <div class="concept-list">
+            <span class="concept">/v1/ URL prefix</span><span class="concept">Accept: application/vnd.api+json;version=2</span><span class="concept">X-API-Version header</span><span class="concept">breaking changes</span><span class="concept">deprecation headers</span><span class="concept">sunset header</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">List 5 breaking changes and 5 non-breaking changes in API design. Examples: removing a field = breaking, adding an optional field = non-breaking.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Implement URL-based versioning in FastAPI using APIRouter with prefix="/v1". Then add a /v2 router that changes the response shape of one endpoint.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Add Deprecation and Sunset response headers to a v1 endpoint that will be removed in 6 months. Write the client-side code that reads and warns about these headers.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(251,113,133,0.1)">📝</div>
+        <div class="card-text">
+          <div class="card-title">API Documentation</div>
+          <div class="card-sub">OpenAPI spec, Swagger UI, versioned docs, SDK generation</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">OpenAPI 3.0 specification mastery</div>
+          <div class="subtopic-desc">The OpenAPI spec is the contract between your API and its consumers. A well-documented API is a professional API.</div>
+          <div class="concept-list">
+            <span class="concept">OpenAPI 3.0</span><span class="concept">Swagger UI</span><span class="concept">ReDoc</span><span class="concept">schemas</span><span class="concept">examples</span><span class="concept">security schemes</span><span class="concept">tags</span><span class="concept">descriptions</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Take your notes API and add complete OpenAPI documentation: description for every endpoint, example request/response bodies, error response schemas, and security scheme.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Write a Pydantic model with detailed field descriptions, examples, and validation constraints that auto-generates rich OpenAPI documentation in FastAPI.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Use the openapi-generator to generate a Python client from your OpenAPI spec. Test that the generated client can make all the calls correctly.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION 3: AUTH & SECURITY -->
+<!-- ═══════════════════════════════ -->
+<div class="section" id="auth">
+  <div class="section-label">Section 03</div>
+  <div class="section-title">Auth & <em>Security</em></div>
+  <div class="section-desc">Authentication and security are not features you add later. They are baked into every design decision. Senior developers think about security from the first line.</div>
+
+  <div class="topic-grid">
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(201,168,76,0.1)">🔑</div>
+        <div class="card-text">
+          <div class="card-title">JWT — JSON Web Tokens</div>
+          <div class="card-sub">Structure, signing, verification, refresh tokens, pitfalls</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">JWT structure and signing algorithms</div>
+          <div class="subtopic-desc">JWT is three base64-encoded JSON objects: header (algorithm), payload (claims), signature. The signature proves the token was created by you. Know this deeply.</div>
+          <div class="concept-list">
+            <span class="concept">header.payload.signature</span><span class="concept">HS256</span><span class="concept">RS256</span><span class="concept">exp claim</span><span class="concept">iat claim</span><span class="concept">sub claim</span><span class="concept">access token</span><span class="concept">refresh token</span><span class="concept">token rotation</span><span class="concept">token blacklist</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Implement create_token(user_id, role) and verify_token(token) using PyJWT. Handle: expired token, invalid signature, malformed token — each with a different exception.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Implement refresh token rotation: access token expires in 15 minutes, refresh token in 7 days. On refresh, issue new both tokens and invalidate old refresh token.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Decode a JWT at jwt.io. Explain why the payload is readable by anyone. Why is this not a security issue? What MUST NOT go in a JWT payload?</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(45,212,191,0.1)">🔐</div>
+        <div class="card-text">
+          <div class="card-title">OAuth 2.0 & OpenID Connect</div>
+          <div class="card-sub">Authorization code flow, PKCE, scopes, social login</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">OAuth 2.0 flows — which to use when</div>
+          <div class="subtopic-desc">OAuth is an authorization framework, not an authentication protocol. OpenID Connect adds identity on top. Understanding the flows is essential for integrating with any third-party auth.</div>
+          <div class="concept-list">
+            <span class="concept">authorization code flow</span><span class="concept">PKCE</span><span class="concept">client credentials</span><span class="concept">scopes</span><span class="concept">access token</span><span class="concept">id token</span><span class="concept">JWKS endpoint</span><span class="concept">state parameter</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Draw the authorization code flow on paper: every HTTP call between user, browser, your app, and GitHub. What is the state parameter for? What is PKCE for?</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Implement GitHub OAuth login in FastAPI: redirect to GitHub, receive code, exchange for token, fetch user profile, create session.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Build a service-to-service auth using client credentials flow. Service A authenticates to get a token, uses it to call Service B's protected endpoint.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(167,139,250,0.1)">🛡️</div>
+        <div class="card-text">
+          <div class="card-title">API Security Threats</div>
+          <div class="card-sub">OWASP API Top 10 — injection, BOLA, mass assignment, SSRF</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">OWASP API Security Top 10</div>
+          <div class="subtopic-desc">The OWASP API Top 10 lists the most critical API vulnerabilities. Senior developers know every one and can identify them in code reviews.</div>
+          <div class="concept-list">
+            <span class="concept">BOLA/IDOR</span><span class="concept">broken auth</span><span class="concept">mass assignment</span><span class="concept">rate limiting missing</span><span class="concept">SSRF</span><span class="concept">SQL injection</span><span class="concept">security misconfiguration</span><span class="concept">unsafe deserialization</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Find the BOLA vulnerability: GET /api/invoices/1234 — user is logged in but this isn't their invoice. Fix it by adding ownership check. Write a test that proves the fix works.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Find the mass assignment: user sends {"name":"Alice","role":"admin"} to PATCH /users/me. Fix it using Pydantic models that explicitly whitelist updatable fields.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Implement SSRF protection for a URL fetching endpoint: block private IP ranges (10.x, 172.16.x, 192.168.x, 127.x), localhost, and non-HTTP protocols.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(251,113,133,0.1)">⚠️</div>
+        <div class="card-text">
+          <div class="card-title">Rate Limiting & Throttling</div>
+          <div class="card-sub">Token bucket, sliding window, leaky bucket algorithms</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Rate limiting algorithms and implementation</div>
+          <div class="subtopic-desc">Rate limiting protects your API from abuse, DDoS, and runaway clients. Know the three main algorithms and when to use each.</div>
+          <div class="concept-list">
+            <span class="concept">token bucket</span><span class="concept">sliding window</span><span class="concept">leaky bucket</span><span class="concept">fixed window</span><span class="concept">Redis counter</span><span class="concept">429 Too Many Requests</span><span class="concept">Retry-After</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Implement sliding window rate limiting using Redis: 100 requests per minute per API key. Return 429 with Retry-After and X-RateLimit-* headers.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Implement different rate limits for different endpoint tiers: 1000/hr for premium, 100/hr for free, 10/hr for anonymous. Middleware reads tier from JWT claims.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Explain in writing why a fixed window algorithm allows 2x the intended traffic at window boundaries. How does sliding window fix this?</div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION 4: ADVANCED PATTERNS -->
+<!-- ═══════════════════════════════ -->
+<div class="section" id="advanced">
+  <div class="section-label">Section 04</div>
+  <div class="section-title">Advanced <em>Patterns</em></div>
+  <div class="section-desc">These are the patterns that separate competent API developers from senior engineers. They appear in system design interviews and in every production system at scale.</div>
+
+  <div class="topic-grid">
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(201,168,76,0.1)">🔁</div>
+        <div class="card-text">
+          <div class="card-title">Idempotency</div>
+          <div class="card-sub">Idempotency keys, deduplication, safe retry patterns</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Idempotency keys for safe retries</div>
+          <div class="subtopic-desc">Network calls fail. Clients retry. Without idempotency keys, a payment gets charged twice. This pattern is used by Stripe, PayPal, and every serious payment API.</div>
+          <div class="concept-list">
+            <span class="concept">Idempotency-Key header</span><span class="concept">deduplication store</span><span class="concept">Redis TTL</span><span class="concept">response caching</span><span class="concept">at-most-once</span><span class="concept">at-least-once</span><span class="concept">exactly-once</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Build a payment endpoint that accepts an Idempotency-Key header. If the same key is seen again within 24 hours, return the cached response without processing again.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Use Redis to store idempotency key → response with 24h TTL. Handle the race condition where two identical requests arrive simultaneously.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Implement client-side retry logic with idempotency keys: generate UUID per operation, retry up to 3 times with exponential backoff on network errors only (not 4xx).</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(45,212,191,0.1)">🔌</div>
+        <div class="card-text">
+          <div class="card-title">Webhooks</div>
+          <div class="card-sub">Design, signature verification, delivery guarantees, retry</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Webhook architecture and security</div>
+          <div class="subtopic-desc">Webhooks are the reverse of an API call — your server pushes events to clients instead of clients polling for updates. Used by Stripe, GitHub, Twilio, and every event-driven integration.</div>
+          <div class="concept-list">
+            <span class="concept">event payload</span><span class="concept">HMAC signature</span><span class="concept">X-Signature-256 header</span><span class="concept">replay attacks</span><span class="concept">timestamp validation</span><span class="concept">delivery retries</span><span class="concept">dead letter queue</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Build a webhook sender: when an event occurs, POST to subscriber URL with event payload and HMAC-SHA256 signature in X-Webhook-Signature header.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Build a webhook receiver that verifies Stripe-style signatures: compute HMAC of timestamp+payload, compare to signature header, reject if timestamp > 5 minutes old.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Implement webhook delivery with retries: attempt delivery, on failure retry at 1m, 5m, 30m, 2h, 24h. After 5 failures, mark as dead and alert. Log every attempt.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(167,139,250,0.1)">🌊</div>
+        <div class="card-text">
+          <div class="card-title">Pagination Patterns</div>
+          <div class="card-sub">Offset, cursor, keyset — when each breaks and why</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Three pagination strategies compared</div>
+          <div class="subtopic-desc">Offset pagination is simple but breaks at scale. Cursor pagination is consistent but complex. Keyset pagination is the fastest at scale.</div>
+          <div class="concept-list">
+            <span class="concept">OFFSET LIMIT</span><span class="concept">cursor</span><span class="concept">keyset</span><span class="concept">stable sort</span><span class="concept">opaque cursor</span><span class="concept">bi-directional</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Implement offset pagination. Then explain the bug: user is on page 3 while new items are added to page 1. What does the user see? Why is this wrong?</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Implement cursor-based pagination using created_at + id as the cursor. Encode cursor as base64 so clients treat it as opaque. Support both next and previous page.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Implement keyset pagination: WHERE created_at < :cursor ORDER BY created_at DESC LIMIT 20. Benchmark it against OFFSET 1000000 LIMIT 20. Show the timing difference.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(251,113,133,0.1)">⚡</div>
+        <div class="card-text">
+          <div class="card-title">Bulk Operations & Batch APIs</div>
+          <div class="card-sub">Bulk create/update/delete, async processing, progress tracking</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Designing batch endpoints that don't time out</div>
+          <div class="subtopic-desc">When a client needs to create 10,000 records, you can't do it synchronously. Batch APIs with async processing and progress tracking are the solution.</div>
+          <div class="concept-list">
+            <span class="concept">POST /batch</span><span class="concept">202 Accepted</span><span class="concept">job ID</span><span class="concept">GET /jobs/:id</span><span class="concept">partial success</span><span class="concept">atomic vs partial</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Build POST /users/batch that accepts up to 1000 users, returns 202 with a job_id immediately, processes in background, stores results per-item with success/error per row.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Build GET /jobs/:id that returns status (pending/processing/done/failed), progress percentage, and when done: total, succeeded, failed counts with per-item errors.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Add a webhook callback option: client provides a URL, you POST the results when the job completes instead of requiring polling.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION 5: PROTOCOLS -->
+<!-- ═══════════════════════════════ -->
+<div class="section" id="protocols">
+  <div class="section-label">Section 05</div>
+  <div class="section-title">API <em>Protocols</em></div>
+  <div class="section-desc">REST is not the only protocol. Senior developers know GraphQL, WebSockets, gRPC, and Server-Sent Events — and can choose the right one for each use case.</div>
+
+  <div class="topic-grid">
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(201,168,76,0.1)">🕸️</div>
+        <div class="card-text">
+          <div class="card-title">GraphQL</div>
+          <div class="card-sub">Schema, resolvers, N+1 problem, DataLoader, subscriptions</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">GraphQL vs REST — when to choose which</div>
+          <div class="subtopic-desc">GraphQL solves over-fetching and under-fetching. REST is simpler and better understood. Senior developers know when each is appropriate.</div>
+          <div class="concept-list">
+            <span class="concept">schema definition</span><span class="concept">queries</span><span class="concept">mutations</span><span class="concept">subscriptions</span><span class="concept">resolvers</span><span class="concept">N+1 problem</span><span class="concept">DataLoader</span><span class="concept">persisted queries</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Build a GraphQL API for a blog using Strawberry (Python). Schema: User, Post, Comment. Implement Query.posts, Query.post(id), Mutation.createPost.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Demonstrate the N+1 problem: fetch 10 posts with their authors. Show the 11 queries in logs. Fix it with DataLoader that batches author fetches into 1 query.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Add a GraphQL subscription for real-time post notifications using WebSockets. Client subscribes to new_post events and receives updates as posts are created.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(45,212,191,0.1)">🔴</div>
+        <div class="card-text">
+          <div class="card-title">WebSockets</div>
+          <div class="card-sub">Full-duplex, connection management, pub/sub, reconnection</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">WebSocket protocol and connection lifecycle</div>
+          <div class="subtopic-desc">WebSockets upgrade an HTTP connection to a persistent, bidirectional channel. Used for chat, live dashboards, collaborative editing, and real-time gaming.</div>
+          <div class="concept-list">
+            <span class="concept">HTTP upgrade handshake</span><span class="concept">ws:// wss://</span><span class="concept">frames</span><span class="concept">ping/pong heartbeat</span><span class="concept">connection manager</span><span class="concept">rooms/channels</span><span class="concept">reconnection strategy</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Build a WebSocket echo server with FastAPI. Add a connection manager that tracks all active connections and supports broadcast to all or send to specific connection.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Implement chat rooms: client joins a room with a message, server broadcasts only to that room. Use Redis pub/sub to support multiple server instances.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Add heartbeat: server sends ping every 30 seconds, disconnects if no pong received. Client auto-reconnects with exponential backoff on disconnect.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(167,139,250,0.1)">📡</div>
+        <div class="card-text">
+          <div class="card-title">Server-Sent Events</div>
+          <div class="card-sub">One-way streaming, EventSource API, reconnection, AI streaming</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">SSE — when to use it over WebSockets</div>
+          <div class="subtopic-desc">SSE is perfect for server-to-client streaming: AI token streaming, live logs, notifications. Simpler than WebSockets when you don't need client-to-server messages.</div>
+          <div class="concept-list">
+            <span class="concept">text/event-stream</span><span class="concept">data: field</span><span class="concept">event: field</span><span class="concept">id: field</span><span class="concept">retry: field</span><span class="concept">Last-Event-ID</span><span class="concept">StreamingResponse</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Build a /stream/logs endpoint using FastAPI StreamingResponse that streams application log lines as SSE events in real time.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Build an AI chat endpoint that streams LLM tokens as SSE events — exactly how ChatGPT streams responses. Include a [DONE] event to signal completion.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Add event IDs and Last-Event-ID support so clients can reconnect and resume the stream from where they left off without missing any events.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(251,113,133,0.1)">⚡</div>
+        <div class="card-text">
+          <div class="card-title">gRPC</div>
+          <div class="card-sub">Protocol Buffers, service definitions, streaming, microservices</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">gRPC — when it outperforms REST</div>
+          <div class="subtopic-desc">gRPC uses Protocol Buffers (binary serialization) over HTTP/2. It's 5-10x faster than REST for inter-service communication. Standard in microservices at Netflix, Google, and Uber.</div>
+          <div class="concept-list">
+            <span class="concept">Protocol Buffers</span><span class="concept">.proto files</span><span class="concept">code generation</span><span class="concept">unary RPC</span><span class="concept">server streaming</span><span class="concept">client streaming</span><span class="concept">bidirectional streaming</span><span class="concept">interceptors</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Write a .proto file for a UserService with GetUser, CreateUser, ListUsers RPCs. Generate Python stubs and implement a gRPC server with grpcio.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Implement server-side streaming: ListUsers streams users one by one rather than returning all at once. Client receives and processes each as it arrives.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Benchmark the same operation over REST+JSON vs gRPC+protobuf: 1000 requests, measure latency and payload size. Document the difference and when it matters.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION 6: PERFORMANCE -->
+<!-- ═══════════════════════════════ -->
+<div class="section" id="performance">
+  <div class="section-label">Section 06</div>
+  <div class="section-title">API <em>Performance</em></div>
+  <div class="section-desc">A correct API that is slow is an unacceptable API. Senior engineers obsess over latency, throughput, and efficiency at every layer.</div>
+
+  <div class="topic-grid">
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(201,168,76,0.1)">🚀</div>
+        <div class="card-text">
+          <div class="card-title">Caching Strategies</div>
+          <div class="card-sub">HTTP caching, CDN, Redis cache-aside, cache invalidation</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Three levels of API caching</div>
+          <div class="subtopic-desc">The fastest request is one that never reaches your server. Caching at the right layer can reduce response time from 200ms to 2ms.</div>
+          <div class="concept-list">
+            <span class="concept">HTTP Cache-Control</span><span class="concept">ETag</span><span class="concept">CDN edge caching</span><span class="concept">cache-aside</span><span class="concept">write-through</span><span class="concept">cache stampede</span><span class="concept">probabilistic early expiration</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Add Cache-Control: max-age=3600 to your GET /products endpoint. Add ETag based on content hash. Verify browser uses 304 Not Modified on second request.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Implement cache-aside with Redis for an expensive database query: check cache first, on miss query DB and populate cache with 5-minute TTL, return data.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Implement cache stampede prevention: when cache expires, only one request rebuilds it (using Redis lock), others wait. Prevents thundering herd on popular data.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(45,212,191,0.1)">📊</div>
+        <div class="card-text">
+          <div class="card-title">Connection Pooling & N+1</div>
+          <div class="card-sub">Database connection pools, N+1 query detection, eager loading</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">N+1 queries — the most common API performance killer</div>
+          <div class="subtopic-desc">N+1 happens when you fetch a list (1 query) then fetch related data for each item (N queries). 100 posts = 101 database queries. Senior developers catch this in code review.</div>
+          <div class="concept-list">
+            <span class="concept">SQLAlchemy selectinload</span><span class="concept">joinedload</span><span class="concept">subqueryload</span><span class="concept">connection pool size</span><span class="concept">pool timeout</span><span class="concept">query logging</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Enable SQLAlchemy query logging. Fetch 20 posts with their authors. Count the queries. Then fix with selectinload(Post.author). Count queries again. Document the difference.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Configure SQLAlchemy connection pool: pool_size=10, max_overflow=20, pool_timeout=30. Explain what happens when all connections are in use and a new request arrives.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Add a middleware that logs a WARNING when any request makes more than 5 database queries. Use it to hunt down N+1 problems in your API.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(167,139,250,0.1)">⏱️</div>
+        <div class="card-text">
+          <div class="card-title">Async & Concurrency</div>
+          <div class="card-sub">async/await in FastAPI, background tasks, concurrency limits</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">async/await — when it helps and when it doesn't</div>
+          <div class="subtopic-desc">Async improves throughput for I/O-bound work (database, network) but does NOT help CPU-bound work. Misusing it is common and dangerous.</div>
+          <div class="concept-list">
+            <span class="concept">async def</span><span class="concept">await</span><span class="concept">asyncio.gather</span><span class="concept">asyncpg</span><span class="concept">httpx async</span><span class="concept">BackgroundTasks</span><span class="concept">Semaphore</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Make 10 API calls concurrently using asyncio.gather with httpx.AsyncClient. Compare time to sequential calls. Measure and document the speedup.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Use asyncio.Semaphore(5) to limit concurrency to 5 simultaneous requests even inside asyncio.gather — prevent overwhelming downstream services.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Add a BackgroundTask to your POST /orders endpoint: return 201 immediately, send confirmation email in background. Verify the response is fast even if email takes 2 seconds.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SECTION 7: TESTING -->
+<!-- ═══════════════════════════════ -->
+<div class="section" id="testing">
+  <div class="section-label">Section 07</div>
+  <div class="section-title">API <em>Testing</em></div>
+  <div class="section-desc">An untested API is a broken API waiting to be discovered in production. Senior developers write tests that give them confidence to ship at any time.</div>
+
+  <div class="topic-grid">
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(201,168,76,0.1)">✅</div>
+        <div class="card-text">
+          <div class="card-title">Integration Testing</div>
+          <div class="card-sub">TestClient, test databases, fixtures, auth helpers</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">FastAPI TestClient — testing the full request cycle</div>
+          <div class="subtopic-desc">Integration tests test your API endpoint to endpoint — routing, validation, business logic, database interaction, and response formatting. These are the most valuable tests for APIs.</div>
+          <div class="concept-list">
+            <span class="concept">TestClient</span><span class="concept">test database</span><span class="concept">fixtures</span><span class="concept">factory_boy</span><span class="concept">auth headers</span><span class="concept">transaction rollback</span><span class="concept">parametrize</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Write integration tests for your notes API: test create, read, update, delete. Each test uses a fresh database (transaction rollback after each test). Include auth token fixture.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Write a parametrized test for your validation: 10 different invalid payloads for POST /users — each should return 422 with a specific error message. Verify message content.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Write a test that verifies BOLA protection: user A creates a resource, user B tries to access it, expect 403. Use two separate auth token fixtures.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(45,212,191,0.1)">🎭</div>
+        <div class="card-text">
+          <div class="card-title">Contract Testing</div>
+          <div class="card-sub">Pact, consumer-driven contracts, API compatibility</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Consumer-driven contract testing</div>
+          <div class="subtopic-desc">In microservices, how do you know a change to Service A won't break Service B which consumes it? Contract testing defines and verifies the agreement between producer and consumer.</div>
+          <div class="concept-list">
+            <span class="concept">consumer contract</span><span class="concept">provider verification</span><span class="concept">Pact</span><span class="concept">schema validation</span><span class="concept">response matching</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Write a schema validation test: after every API call in your integration tests, validate the response body against a Pydantic model. Any schema mismatch fails the test.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">Write a "breaking change" test: add it to your test suite to verify you haven't removed any required fields or changed field types from your documented response schema.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Use Pact to write a consumer contract for a client that calls your notes API. Run the provider verification against your actual API. Make a breaking change and see it fail.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" onclick="toggle(this)">
+      <div class="card-top">
+        <div class="card-icon" style="background:rgba(167,139,250,0.1)">📈</div>
+        <div class="card-text">
+          <div class="card-title">Load Testing</div>
+          <div class="card-sub">Locust, k6, finding bottlenecks, p99 latency</div>
+        </div>
+        <button class="card-toggle">+</button>
+      </div>
+      <div class="card-body">
+        <div class="subtopic">
+          <div class="subtopic-name">Load testing your API before production</div>
+          <div class="subtopic-desc">You must know how your API behaves under load before users find out the hard way. Senior developers load test and know their API's limits.</div>
+          <div class="concept-list">
+            <span class="concept">Locust</span><span class="concept">k6</span><span class="concept">RPS (requests per second)</span><span class="concept">p50 p95 p99 latency</span><span class="concept">error rate</span><span class="concept">breaking point</span><span class="concept">ramp-up</span>
+          </div>
+          <div class="ex-label">Exercises</div>
+          <div class="exercise"><div class="ex-num">01</div><div><div class="ex-text">Write a Locust test for your notes API. Ramp up to 100 concurrent users. Record p50, p95, p99 latency and error rate. Find where it starts degrading.</div></div></div>
+          <div class="exercise"><div class="ex-num">02</div><div><div class="ex-text">After load testing, identify your bottleneck (DB? serialization? missing index?). Fix it. Re-run the load test. Document the before/after improvement.</div></div></div>
+          <div class="exercise"><div class="ex-num">03</div><div><div class="ex-text">Set up a performance regression test: run k6 in CI and fail the build if p99 latency exceeds 500ms or error rate exceeds 0.1%.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- PROJECTS -->
+<!-- ═══════════════════════════════ -->
+<div class="section" id="projects">
+  <div class="section-label">Section 08</div>
+  <div class="section-title">15 <em>Projects</em></div>
+  <div class="section-desc">Knowledge without building is theory. Each project below targets specific API concepts, has milestones, and a Claude command to start immediately.</div>
+
+  <div class="projects-list">
+
+    <!-- P1 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">01</div>
+        <div class="proj-info">
+          <div class="proj-title">REST API Fundamentals — Notes App</div>
+          <div class="proj-short">CRUD · status codes · validation · pagination · OpenAPI docs</div>
+        </div>
+        <div class="proj-badge badge-b">Beginner</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">The foundational project. Build a complete REST API for a notes app — every HTTP method, correct status codes, Pydantic validation, pagination, and full OpenAPI documentation. The template for every API you build after this.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">FastAPI app with router structure: /api/v1/notes, /api/v1/users</li>
+          <li class="milestone">All 5 CRUD endpoints with correct HTTP methods and status codes</li>
+          <li class="milestone">Pydantic models for request validation with custom error messages</li>
+          <li class="milestone">Consistent response envelope and RFC 7807 error format</li>
+          <li class="milestone">Pagination: page+limit with total, has_next, has_previous in response</li>
+          <li class="milestone">Full OpenAPI documentation with examples for every endpoint</li>
+          <li class="milestone">Integration tests for every endpoint including error cases</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-green">HTTP methods</span><span class="level-pill pill-green">status codes</span><span class="level-pill pill-gold">Pydantic</span><span class="level-pill pill-gold">pagination</span><span class="level-pill pill-rose">OpenAPI</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Build a production REST API for a notes app using FastAPI. Start with the URL structure and HTTP method design — explain every decision before I write code. Then give me milestones from basic CRUD to full OpenAPI docs. Review my code at each milestone.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P2 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">02</div>
+        <div class="proj-info">
+          <div class="proj-title">JWT Authentication Service</div>
+          <div class="proj-short">JWT · bcrypt · refresh tokens · RBAC · protected routes</div>
+        </div>
+        <div class="proj-badge badge-b">Beginner</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">A standalone authentication service. Registration, login, JWT access tokens (15min expiry), refresh tokens (7 day), role-based access control, and token rotation. The auth layer every other project will use.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">POST /auth/register — bcrypt password, return user (no password)</li>
+          <li class="milestone">POST /auth/login — verify password, return access + refresh tokens</li>
+          <li class="milestone">POST /auth/refresh — verify refresh token, return new pair, invalidate old</li>
+          <li class="milestone">Dependency get_current_user — verify JWT, inject user into route</li>
+          <li class="milestone">Role-based decorator: @require_role("admin") for protected endpoints</li>
+          <li class="milestone">POST /auth/logout — blacklist refresh token in Redis</li>
+          <li class="milestone">Rate limiting: 5 failed login attempts → 15 minute lockout</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-green">JWT</span><span class="level-pill pill-green">bcrypt</span><span class="level-pill pill-gold">refresh tokens</span><span class="level-pill pill-gold">RBAC</span><span class="level-pill pill-rose">Redis blacklist</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Teach me JWT authentication by building a complete auth service in FastAPI. Explain the JWT structure and why refresh tokens exist before I write any code. Give me milestones from registration to role-based access control with Redis token blacklist.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P3 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">03</div>
+        <div class="proj-info">
+          <div class="proj-title">API Rate Limiter Middleware</div>
+          <div class="proj-short">Redis · sliding window · token bucket · tiered limits</div>
+        </div>
+        <div class="proj-badge badge-b">Beginner</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Build a production-grade rate limiting middleware using Redis. Implement both sliding window and token bucket algorithms, tiered limits by user plan, and proper rate limit headers.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">Fixed window rate limiter using Redis counter with TTL</li>
+          <li class="milestone">Sliding window using Redis sorted set — fix the boundary bug</li>
+          <li class="milestone">Token bucket algorithm — allow burst then throttle</li>
+          <li class="milestone">Tiered limits from JWT claims: free=100/hr, pro=1000/hr, admin=unlimited</li>
+          <li class="milestone">Rate limit headers on every response: Limit, Remaining, Reset</li>
+          <li class="milestone">429 response with Retry-After header and helpful error message</li>
+          <li class="milestone">Per-endpoint limits: /api/ai/* stricter than /api/notes/*</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-green">Redis</span><span class="level-pill pill-green">middleware</span><span class="level-pill pill-gold">sliding window</span><span class="level-pill pill-gold">token bucket</span><span class="level-pill pill-rose">tiered limits</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Help me build a production rate limiter middleware for FastAPI using Redis. First explain the three main algorithms — fixed window, sliding window, token bucket — and when each breaks. Then give me milestones to implement all three with tiered limits from JWT claims.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P4 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">04</div>
+        <div class="proj-info">
+          <div class="proj-title">Webhook System — Send & Receive</div>
+          <div class="proj-short">HMAC signatures · retry queue · delivery guarantees</div>
+        </div>
+        <div class="proj-badge badge-i">Intermediate</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Build both sides of a webhook system: a webhook sender that delivers events to subscriber URLs with HMAC signature security, and a receiver that verifies signatures and handles retries.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">Webhook subscription: POST /webhooks — register URL + events + secret</li>
+          <li class="milestone">Event dispatcher: on event, POST to all subscribers asynchronously</li>
+          <li class="milestone">HMAC-SHA256 signature: sign timestamp+payload with subscriber secret</li>
+          <li class="milestone">Retry queue: on delivery failure, retry at 1m, 5m, 30m, 2h, 24h</li>
+          <li class="milestone">Receiver endpoint: verify signature, reject if timestamp > 5min old</li>
+          <li class="milestone">Delivery log: record every attempt, status code, response time</li>
+          <li class="milestone">Dashboard: GET /webhooks/:id/deliveries — show delivery history</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-green">webhooks</span><span class="level-pill pill-green">HMAC</span><span class="level-pill pill-gold">Celery retry</span><span class="level-pill pill-gold">replay attack prevention</span><span class="level-pill pill-rose">delivery guarantees</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Help me build a complete webhook system — both sender and receiver. Explain HMAC signature verification and replay attack prevention before I start. Give me milestones for a system with Celery-powered retry queue and delivery logging.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P5 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">05</div>
+        <div class="proj-info">
+          <div class="proj-title">GraphQL Blog API</div>
+          <div class="proj-short">Strawberry · resolvers · DataLoader · subscriptions</div>
+        </div>
+        <div class="proj-badge badge-i">Intermediate</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">A complete GraphQL API for a blog platform. Learn schema design, resolvers, the N+1 problem and DataLoader fix, mutations, and real-time subscriptions. Compare with your REST implementation.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">Schema: User, Post, Comment, Tag types with all relationships</li>
+          <li class="milestone">Queries: posts, post(id), user(id), search(query)</li>
+          <li class="milestone">Mutations: createPost, updatePost, deletePost, addComment</li>
+          <li class="milestone">N+1 demonstration: fetch 20 posts with authors — show 21 queries in logs</li>
+          <li class="milestone">DataLoader: batch author fetches — verify reduced to 2 queries</li>
+          <li class="milestone">Subscriptions: onNewPost, onNewComment using WebSockets</li>
+          <li class="milestone">Auth: @login_required directive for protected mutations</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-green">GraphQL</span><span class="level-pill pill-green">Strawberry</span><span class="level-pill pill-gold">DataLoader</span><span class="level-pill pill-gold">N+1 fix</span><span class="level-pill pill-rose">subscriptions</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Help me build a GraphQL blog API using Strawberry in Python. Explain GraphQL vs REST tradeoffs first. Give me milestones from basic schema to DataLoader optimization. I want to see and fix the N+1 problem myself — guide me to discover it rather than telling me upfront.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P6 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">06</div>
+        <div class="proj-info">
+          <div class="proj-title">Real-time API with WebSockets</div>
+          <div class="proj-short">WebSockets · Redis pub/sub · rooms · presence · reconnection</div>
+        </div>
+        <div class="proj-badge badge-i">Intermediate</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Build a real-time chat backend with rooms, user presence, typing indicators, and message history. Scale across multiple server instances using Redis pub/sub.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">WebSocket endpoint with connection manager tracking all connections</li>
+          <li class="milestone">Room system: join, leave, list members, broadcast to room only</li>
+          <li class="milestone">Message persistence: save to PostgreSQL, load history on join</li>
+          <li class="milestone">Redis pub/sub: broadcast across multiple server instances</li>
+          <li class="milestone">User presence: online/offline/away with heartbeat ping/pong</li>
+          <li class="milestone">Typing indicators: user_typing events with 3-second auto-clear</li>
+          <li class="milestone">Client reconnection with exponential backoff and message catch-up</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-green">WebSockets</span><span class="level-pill pill-green">Redis pub/sub</span><span class="level-pill pill-gold">presence</span><span class="level-pill pill-gold">horizontal scaling</span><span class="level-pill pill-rose">reconnection</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Help me build a production WebSocket chat backend. Explain the WebSocket protocol and how it differs from HTTP first. Give me milestones from basic echo server to multi-room chat with Redis pub/sub for horizontal scaling.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P7 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">07</div>
+        <div class="proj-info">
+          <div class="proj-title">API Gateway from Scratch</div>
+          <div class="proj-short">Reverse proxy · routing · auth · rate limiting · logging</div>
+        </div>
+        <div class="proj-badge badge-i">Intermediate</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Build a lightweight API gateway that sits in front of multiple backend services — routing requests, enforcing auth, applying rate limits, and logging. Understand what nginx/Kong/AWS API Gateway actually do.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">Route table: /api/users/* → user-service, /api/posts/* → post-service</li>
+          <li class="milestone">Reverse proxy: forward requests and stream responses back</li>
+          <li class="milestone">JWT verification at gateway — services receive pre-verified user</li>
+          <li class="milestone">Rate limiting per API key before requests reach services</li>
+          <li class="milestone">Request/response logging with correlation IDs across all services</li>
+          <li class="milestone">Circuit breaker: stop forwarding to unhealthy services</li>
+          <li class="milestone">Health check aggregator: GET /health checks all upstream services</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-green">API gateway</span><span class="level-pill pill-green">reverse proxy</span><span class="level-pill pill-gold">circuit breaker</span><span class="level-pill pill-gold">correlation IDs</span><span class="level-pill pill-rose">service health</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Help me build a lightweight API gateway in FastAPI that I can put in front of multiple services. Explain what an API gateway is and what problems it solves before we start. Give me milestones from basic routing to circuit breakers and health aggregation.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P8 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">08</div>
+        <div class="proj-info">
+          <div class="proj-title">Idempotent Payment API</div>
+          <div class="proj-short">Idempotency keys · Stripe integration · state machines</div>
+        </div>
+        <div class="proj-badge badge-i">Intermediate</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Build a payment processing API that is safe to retry — idempotency keys prevent double charges, state machines track payment lifecycle, and Stripe webhooks confirm settlement.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">Payment model with state machine: pending → processing → succeeded/failed</li>
+          <li class="milestone">POST /payments with Idempotency-Key header — first call processes</li>
+          <li class="milestone">Redis idempotency store: same key returns cached response within 24h</li>
+          <li class="milestone">Stripe payment intent integration: create, confirm, capture</li>
+          <li class="milestone">Stripe webhook endpoint: payment_intent.succeeded → update state</li>
+          <li class="milestone">HMAC signature verification on all incoming Stripe webhooks</li>
+          <li class="milestone">Retry-safe client: generates UUID per payment, retries on network error</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-green">idempotency</span><span class="level-pill pill-green">Stripe</span><span class="level-pill pill-gold">state machines</span><span class="level-pill pill-gold">webhooks</span><span class="level-pill pill-rose">safe retries</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Help me build an idempotent payment API with Stripe. Explain idempotency keys and why they matter for payments before we start. Give me milestones from the payment state machine to Stripe webhook handling with signature verification.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P9 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">09</div>
+        <div class="proj-info">
+          <div class="proj-title">OAuth 2.0 Provider</div>
+          <div class="proj-short">Authorization code · PKCE · consent screen · token introspection</div>
+        </div>
+        <div class="proj-badge badge-i">Intermediate</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Build your own OAuth 2.0 authorization server — the same thing GitHub, Google, and Twitter run when you click "Login with GitHub". Understanding it from the inside makes you unstoppable.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">Client registration: POST /oauth/clients — store client_id, secret, redirect URIs</li>
+          <li class="milestone">Authorization endpoint: GET /oauth/authorize — show consent screen</li>
+          <li class="milestone">Code exchange: POST /oauth/token — exchange code for access token</li>
+          <li class="milestone">PKCE: code_verifier + code_challenge for public clients</li>
+          <li class="milestone">Scope system: define granular permissions, user grants per-scope</li>
+          <li class="milestone">Token introspection: POST /oauth/introspect — validate token for resource servers</li>
+          <li class="milestone">Client credentials flow for service-to-service auth</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-green">OAuth 2.0</span><span class="level-pill pill-green">PKCE</span><span class="level-pill pill-gold">scopes</span><span class="level-pill pill-gold">consent</span><span class="level-pill pill-rose">introspection</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Help me build an OAuth 2.0 authorization server from scratch. Draw out every flow on paper with me first — authorization code, PKCE, client credentials. Then give me milestones to implement a working OAuth provider that other apps can use to "Login with my app".</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P10 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">10</div>
+        <div class="proj-info">
+          <div class="proj-title">gRPC Microservices</div>
+          <div class="proj-short">Protocol Buffers · streaming · interceptors · load balancing</div>
+        </div>
+        <div class="proj-badge badge-a">Advanced</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Build two microservices communicating over gRPC — a user service and a notification service. Implement all four RPC types, interceptors for auth and logging, and benchmark against REST.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">Define .proto file: UserService and NotificationService RPCs</li>
+          <li class="milestone">Generate Python stubs and implement gRPC server for both services</li>
+          <li class="milestone">Unary, server-streaming, client-streaming, bidirectional streaming RPCs</li>
+          <li class="milestone">gRPC interceptor for auth token verification on every call</li>
+          <li class="milestone">gRPC interceptor for request logging and timing</li>
+          <li class="milestone">Benchmark: REST vs gRPC for 1000 identical operations — document results</li>
+          <li class="milestone">gRPC-gateway: expose REST API that proxies to gRPC backend</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-rose">gRPC</span><span class="level-pill pill-rose">Protocol Buffers</span><span class="level-pill pill-violet">streaming RPCs</span><span class="level-pill pill-violet">interceptors</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Teach me gRPC by building two microservices that communicate over it. Explain Protocol Buffers and why gRPC is faster than REST before we start. Give me milestones for all four RPC types with auth interceptors, and include a benchmark against REST at the end.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P11 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">11</div>
+        <div class="proj-info">
+          <div class="proj-title">API Versioning Strategy</div>
+          <div class="proj-short">URL · header · content negotiation · deprecation lifecycle</div>
+        </div>
+        <div class="proj-badge badge-a">Advanced</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Take an existing API through a major version migration. Implement all three versioning strategies, define what constitutes a breaking change, add deprecation warnings, and maintain v1 compatibility while shipping v2.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">Implement URL versioning: /v1/users and /v2/users with different schemas</li>
+          <li class="milestone">Implement header versioning: X-API-Version: 2 routes to v2 handlers</li>
+          <li class="milestone">Breaking change: v2 renames user.full_name to user.name — v1 still works</li>
+          <li class="milestone">Deprecation headers on all v1 endpoints: Deprecation + Sunset dates</li>
+          <li class="milestone">Migration guide auto-generated from schema diff</li>
+          <li class="milestone">Analytics: log which clients still use v1, send email warnings</li>
+          <li class="milestone">Sunset: after date, v1 returns 410 Gone with migration instructions</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-rose">versioning</span><span class="level-pill pill-rose">deprecation</span><span class="level-pill pill-violet">migration</span><span class="level-pill pill-violet">breaking changes</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Help me implement a complete API versioning strategy for an existing FastAPI app. Explain what constitutes a breaking vs non-breaking change first. Give me milestones covering all three versioning approaches, deprecation headers, and a sunset strategy that alerts clients before removing v1.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P12 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">12</div>
+        <div class="proj-info">
+          <div class="proj-title">AI Streaming API</div>
+          <div class="proj-short">SSE · LLM streaming · conversation history · token counting</div>
+        </div>
+        <div class="proj-badge badge-a">Advanced</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Build an AI chat API that streams LLM tokens using Server-Sent Events — exactly how ChatGPT works. Add conversation management, token counting, cost tracking, and streaming cancellation.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">POST /chat — send message, get streaming SSE response token by token</li>
+          <li class="milestone">Conversation sessions: store history, send full context to LLM</li>
+          <li class="milestone">Token counting before sending: estimate cost, reject if over limit</li>
+          <li class="milestone">SSE event types: token, done, error — client handles each differently</li>
+          <li class="milestone">Stream cancellation: client disconnects → cancel LLM request mid-stream</li>
+          <li class="milestone">Usage tracking: log tokens in/out, cost per request, per user monthly</li>
+          <li class="milestone">Rate limit by token budget: users have monthly token allowance</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-rose">SSE</span><span class="level-pill pill-rose">streaming</span><span class="level-pill pill-violet">LLM API</span><span class="level-pill pill-violet">token budget</span><span class="level-pill pill-green">cancellation</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Help me build an AI chat API that streams responses like ChatGPT using Server-Sent Events. Explain SSE vs WebSockets first — why is SSE better for LLM streaming? Give me milestones from basic streaming to token budget management and stream cancellation.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P13 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">13</div>
+        <div class="proj-info">
+          <div class="proj-title">API Analytics & Observability</div>
+          <div class="proj-short">Prometheus · custom metrics · distributed tracing · alerting</div>
+        </div>
+        <div class="proj-badge badge-a">Advanced</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Add complete observability to your API: metrics with Prometheus, distributed tracing with OpenTelemetry, structured logging with correlation IDs, and alerts when SLOs are breached.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">Prometheus metrics: request rate, error rate, latency histogram by endpoint</li>
+          <li class="milestone">Custom business metrics: active users, API calls per plan tier</li>
+          <li class="milestone">OpenTelemetry tracing: trace ID propagates through all service calls</li>
+          <li class="milestone">Structured JSON logging: every log has trace_id, user_id, request_id</li>
+          <li class="milestone">Grafana dashboard: RPS, error rate, p50/p95/p99 latency</li>
+          <li class="milestone">SLO alerts: PagerDuty/Slack when error rate > 1% or p99 > 500ms</li>
+          <li class="milestone">API usage report endpoint: GET /analytics/usage — per-client metrics</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-rose">Prometheus</span><span class="level-pill pill-rose">OpenTelemetry</span><span class="level-pill pill-violet">SLOs</span><span class="level-pill pill-violet">distributed tracing</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Help me add production observability to my FastAPI API. Explain the difference between metrics, logs, and traces first. Give me milestones from Prometheus instrumentation to distributed tracing with OpenTelemetry and SLO-based alerting.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P14 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">14</div>
+        <div class="proj-info">
+          <div class="proj-title">API Load Testing Suite</div>
+          <div class="proj-short">Locust · k6 · bottleneck analysis · performance regression CI</div>
+        </div>
+        <div class="proj-badge badge-a">Advanced</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">Build a comprehensive load testing suite for your API. Find your bottlenecks, fix them, measure improvement, and add performance regression tests to your CI pipeline.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">Locust test: realistic user flows — login, create, read, update, delete</li>
+          <li class="milestone">Ramp to 500 concurrent users — find where p99 exceeds 500ms</li>
+          <li class="milestone">Profile the bottleneck: is it DB queries? Serialization? Network?</li>
+          <li class="milestone">Fix the bottleneck — add index, add cache, optimize query</li>
+          <li class="milestone">Re-run load test — document before/after improvement with charts</li>
+          <li class="milestone">k6 performance regression test: fail CI if p99 > 500ms or error > 0.1%</li>
+          <li class="milestone">Stress test: find the breaking point — max RPS before 5xx errors appear</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-rose">Locust</span><span class="level-pill pill-rose">k6</span><span class="level-pill pill-violet">profiling</span><span class="level-pill pill-violet">p99 latency</span><span class="level-pill pill-green">CI performance gates</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>Help me build a complete load testing suite for my FastAPI API. Explain p50/p95/p99 latency and why they matter more than average. Give me milestones: Locust setup, finding the bottleneck, fixing it, and adding k6 performance regression tests to GitHub Actions.</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- P15 -->
+    <div class="project-card" onclick="toggleProj(this)">
+      <div class="proj-header">
+        <div class="proj-num">15</div>
+        <div class="proj-info">
+          <div class="proj-title">Production API Platform — Capstone</div>
+          <div class="proj-short">Everything combined · multi-tenant · SLOs · full observability</div>
+        </div>
+        <div class="proj-badge badge-a">Advanced</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-desc">The capstone: a production-grade multi-tenant API platform combining every skill from this guide. JWT auth, rate limiting, webhook delivery, GraphQL + REST, real-time WebSockets, Stripe billing, full observability, load tested and CI/CD deployed.</div>
+        <div class="proj-section">Milestones</div>
+        <ul class="milestone-list">
+          <li class="milestone">Multi-tenant: organisations, members, roles, per-tenant data isolation</li>
+          <li class="milestone">Dual interface: REST + GraphQL serving the same business logic</li>
+          <li class="milestone">Real-time layer: WebSocket events for live data updates</li>
+          <li class="milestone">Webhook system: tenants subscribe to platform events</li>
+          <li class="milestone">Stripe billing: plan tiers with API rate limits enforced from JWT claims</li>
+          <li class="milestone">Full observability: Prometheus + tracing + structured logs + Grafana</li>
+          <li class="milestone">Load tested to 1000 RPS with performance regression CI gate</li>
+          <li class="milestone">Deployed: Docker + GitHub Actions + cloud with zero-downtime deploys</li>
+        </ul>
+        <div class="proj-section">Topics covered</div>
+        <div class="topics-row">
+          <span class="level-pill pill-rose">everything</span><span class="level-pill pill-violet">multi-tenant</span><span class="level-pill pill-violet">production</span><span class="level-pill pill-rose">SLOs</span><span class="level-pill pill-green">portfolio</span>
+        </div>
+        <div class="claude-block">
+          <div class="claude-lbl">Claude command</div>
+          <button class="copy-btn" onclick="cp(this)">copy</button>
+          <pre>I've completed all 14 API projects and I'm ready for the capstone. Help me architect a production API platform with multi-tenancy, dual REST+GraphQL interfaces, WebSockets, webhook delivery, Stripe billing, and full observability. Start with system architecture — draw every component and how they connect — before we write a single line of code.</pre>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- CHEATSHEET -->
+<!-- ═══════════════════════════════ -->
+<div class="section" id="cheatsheet">
+  <div class="section-label">Section 09</div>
+  <div class="section-title">Senior Dev <em>Cheatsheet</em></div>
+  <div class="section-desc">The quick reference every senior backend developer keeps in their head. Status codes, headers, patterns, and the questions interviewers love to ask.</div>
+
+  <h3 style="font-family:var(--display);font-size:20px;margin-bottom:16px;color:var(--gold2)">HTTP Status Codes</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Code</th><th>Name</th><th>When to use</th></tr>
+      <tr><td>200</td><td>OK</td><td>Successful GET, PUT, PATCH — returns data</td></tr>
+      <tr><td>201</td><td>Created</td><td>Successful POST that created a resource — include Location header</td></tr>
+      <tr><td>202</td><td>Accepted</td><td>Request accepted for async processing — return job ID</td></tr>
+      <tr><td>204</td><td>No Content</td><td>Successful DELETE or action with no response body</td></tr>
+      <tr><td>301</td><td>Moved Permanently</td><td>Resource has a new permanent URL — client should update bookmarks</td></tr>
+      <tr><td>304</td><td>Not Modified</td><td>ETag matched — client can use cached version</td></tr>
+      <tr><td>400</td><td>Bad Request</td><td>Malformed request syntax, invalid format (not validation)</td></tr>
+      <tr><td>401</td><td>Unauthorized</td><td>No token or invalid token — authentication required</td></tr>
+      <tr><td>403</td><td>Forbidden</td><td>Valid token but insufficient permissions — you know who they are</td></tr>
+      <tr><td>404</td><td>Not Found</td><td>Resource doesn't exist — or you're hiding it exists (security)</td></tr>
+      <tr><td>409</td><td>Conflict</td><td>State conflict — duplicate email, concurrent edit collision</td></tr>
+      <tr><td>410</td><td>Gone</td><td>Resource permanently deleted — unlike 404, it existed before</td></tr>
+      <tr><td>422</td><td>Unprocessable</td><td>Validation failed — well-formed request but semantic errors</td></tr>
+      <tr><td>429</td><td>Too Many Requests</td><td>Rate limit exceeded — include Retry-After header</td></tr>
+      <tr><td>500</td><td>Server Error</td><td>Unexpected server error — never return implementation details</td></tr>
+      <tr><td>502</td><td>Bad Gateway</td><td>Upstream service returned invalid response</td></tr>
+      <tr><td>503</td><td>Service Unavailable</td><td>Server down for maintenance or overloaded</td></tr>
+    </table>
+  </div>
+
+  <h3 style="font-family:var(--display);font-size:20px;margin:32px 0 16px;color:var(--gold2)">HTTP Methods Quick Reference</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Method</th><th>Safe?</th><th>Idempotent?</th><th>Use for</th></tr>
+      <tr><td>GET</td><td style="color:var(--teal2)">✓ Yes</td><td style="color:var(--teal2)">✓ Yes</td><td>Fetch resource — never modify state</td></tr>
+      <tr><td>POST</td><td style="color:var(--rose)">✗ No</td><td style="color:var(--rose)">✗ No</td><td>Create resource or trigger action — can create duplicates</td></tr>
+      <tr><td>PUT</td><td style="color:var(--rose)">✗ No</td><td style="color:var(--teal2)">✓ Yes</td><td>Replace entire resource — same result if called 10 times</td></tr>
+      <tr><td>PATCH</td><td style="color:var(--rose)">✗ No</td><td style="color:var(--muted)">~ Maybe</td><td>Partial update — idempotent only if designed carefully</td></tr>
+      <tr><td>DELETE</td><td style="color:var(--rose)">✗ No</td><td style="color:var(--teal2)">✓ Yes</td><td>Remove resource — calling twice has same result</td></tr>
+      <tr><td>HEAD</td><td style="color:var(--teal2)">✓ Yes</td><td style="color:var(--teal2)">✓ Yes</td><td>Get headers only — check if resource exists without body</td></tr>
+      <tr><td>OPTIONS</td><td style="color:var(--teal2)">✓ Yes</td><td style="color:var(--teal2)">✓ Yes</td><td>CORS preflight — discover allowed methods</td></tr>
+    </table>
+  </div>
+
+  <h3 style="font-family:var(--display);font-size:20px;margin:32px 0 16px;color:var(--gold2)">API Interview Questions — Senior Level</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Question</th><th>What they're testing</th></tr>
+      <tr><td>What's the difference between 401 and 403?</td><td>HTTP semantics — 401 = who are you, 403 = I know who you are but no</td></tr>
+      <tr><td>What is idempotency and why does it matter?</td><td>API design — safe retries, POST vs PUT, payment safety</td></tr>
+      <tr><td>How would you design pagination for a social feed?</td><td>Cursor vs offset, real-time data, keyset pagination</td></tr>
+      <tr><td>What is a breaking change in an API?</td><td>Versioning knowledge — removing fields, changing types, removing endpoints</td></tr>
+      <tr><td>How do you prevent a double charge in a payment API?</td><td>Idempotency keys, exactly-once delivery</td></tr>
+      <tr><td>Explain the OAuth 2.0 authorization code flow</td><td>Auth depth — every step, what the code is for, why PKCE exists</td></tr>
+      <tr><td>What is the N+1 problem and how do you fix it?</td><td>Database performance — ORM lazy loading, eager loading, DataLoader</td></tr>
+      <tr><td>How would you design a webhook system?</td><td>Event-driven design — HMAC, retries, delivery guarantees</td></tr>
+      <tr><td>REST vs GraphQL — when do you choose each?</td><td>Trade-off thinking — over/under fetching, caching, complexity</td></tr>
+      <tr><td>What happens in the 5 seconds between request and response?</td><td>HTTP lifecycle — DNS, TCP, TLS, routing, middleware, DB, serialization</td></tr>
+    </table>
+  </div>
+
+  <h3 style="font-family:var(--display);font-size:20px;margin:32px 0 16px;color:var(--gold2)">Protocol Comparison</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Protocol</th><th>Direction</th><th>Best for</th><th>Avoid when</th></tr>
+      <tr><td>REST</td><td>Request/response</td><td>Standard CRUD APIs, public APIs, simple integrations</td><td>Real-time, heavy inter-service communication</td></tr>
+      <tr><td>GraphQL</td><td>Request/response</td><td>Complex frontends, avoiding over-fetching, multiple clients</td><td>Simple APIs, file uploads, teams without GraphQL experience</td></tr>
+      <tr><td>WebSocket</td><td>Bidirectional</td><td>Chat, games, collaboration, anything needing client→server messages</td><td>One-way streaming, simple notifications</td></tr>
+      <tr><td>SSE</td><td>Server→client</td><td>Live feeds, AI token streaming, notifications, logs</td><td>Client needs to send messages back to server</td></tr>
+      <tr><td>gRPC</td><td>Request/response + streaming</td><td>Inter-service, high throughput, type-safe contracts, mobile</td><td>Browser clients (limited support), public APIs</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<hr class="divider">
+
+<div class="footer">
+  <span>rebooted_engineer</span> · API Mastery Guide · Senior Backend Developer Reference<br>
+  <span style="font-size:10px;margin-top:6px;display:block;color:var(--muted)">Click any card to expand. Click any project to see milestones and Claude command.</span>
+</div>
+
+</div><!-- end wrap -->
+
+<script>
+window.addEventListener('scroll', () => {
+  const p = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('prog').style.width = p + '%';
+});
+
+function toggle(card) {
+  if (event.target.tagName === 'BUTTON' && !event.target.classList.contains('card-toggle')) return;
+  card.classList.toggle('open');
+}
+
+function toggleProj(card) {
+  if (event.target.tagName === 'BUTTON' && !event.target.closest('.proj-header')) return;
+  if (event.target.closest('.claude-block')) return;
+  card.classList.toggle('open');
+}
+
+function go(id) {
+  document.getElementById(id).scrollIntoView({ behavior:'smooth', block:'start' });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function cp(btn) {
+  event.stopPropagation();
+  const text = btn.nextElementSibling.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copied!';
+    btn.style.color = 'var(--teal2)';
+    setTimeout(() => { btn.textContent = 'copy'; btn.style.color = ''; }, 2000);
+  });
+}
+
+// Stagger animations
+document.querySelectorAll('.topic-card, .project-card').forEach((el, i) => {
+  el.style.animationDelay = i * 0.04 + 's';
+});
+
+// Active nav on scroll
+const secs = ['fundamentals','rest','auth','advanced','protocols','performance','testing','projects','cheatsheet'];
+const btns = document.querySelectorAll('.nav-btn:not(:first-child)');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 100) cur = id;
+  });
+  btns.forEach((b, i) => b.classList.toggle('active', secs[i] === cur));
+}, { passive: true });
+</script>
+</body>
+</html>
